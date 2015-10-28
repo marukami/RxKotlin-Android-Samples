@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
+
+    defaultConfig {
+        applicationId "au.com.tilbrook.android.rxkotlin"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support:appcompat-v7:23.1.0'
+
+    compile 'io.reactivex:rxandroid:1.0.1'
+    // Because RxAndroid releases are few and far between, it is recommended you also
+    // explicitly depend on RxJava's latest version for bug fixes and new features.
+    compile 'io.reactivex:rxjava:1.0.14'
+    compile 'io.reactivex:rxjava-math:1.0.0'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.2.0'
+
+    compile 'com.jakewharton.timber:timber:2.4.2'
+    compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
+    compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile 'com.squareup.retrofit:converter-gson:2.0.0-beta2'
+    compile 'com.squareup.okhttp:okhttp:2.5.0'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
+
+    // sdk19, sdk21, sdk23 are also available
+    compile 'org.jetbrains.anko:anko-sdk15:0.7.2'
+    // In case you need support.v4 bindings
+    compile 'org.jetbrains.anko:anko-support-v4:0.7.2'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+buildscript {
+    ext.kotlin_version = '1.0.0-beta-1038'
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+repositories {
+    mavenCentral()
+}
