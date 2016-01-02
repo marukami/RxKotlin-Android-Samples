@@ -224,6 +224,7 @@ class RetrofitFragment : Fragment() {
                 it.proceed(newReq)
             })
 
+            builder.client(client)
         }
 
         return builder.build().create(GithubApi::class.java)
