@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.utils.unsubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import com.jakewharton.rxbinding.view.RxView
 import org.jetbrains.anko.*
@@ -52,7 +52,7 @@ class BufferDemoFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
-        _subscription.unsubscribeIfNotNull()
+        _subscription.unSubscribeIfNotNull()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

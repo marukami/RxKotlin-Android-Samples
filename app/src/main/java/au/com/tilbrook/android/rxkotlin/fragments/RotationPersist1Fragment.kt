@@ -16,8 +16,8 @@ import timber.log.Timber
 
 import android.os.Looper.getMainLooper
 import android.view.Gravity
-import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnsubscribed
-import au.com.tilbrook.android.rxkotlin.utils.unsubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
+import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.dip
@@ -82,7 +82,7 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
 
     override fun onResume() {
         super.onResume()
-        _subscriptions = getNewCompositeSubIfUnsubscribed(_subscriptions)
+        _subscriptions = getNewCompositeSubIfUnSubscribed(_subscriptions)
     }
 
     override fun onCreateView(inflater: LayoutInflater?,
@@ -110,7 +110,7 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
 
     override fun onPause() {
         super.onPause()
-        _subscriptions.unsubscribeIfNotNull()
+        _subscriptions.unSubscribeIfNotNull()
     }
 
     private fun _setupLogger() {

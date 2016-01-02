@@ -15,7 +15,7 @@ import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.utils.spf
-import au.com.tilbrook.android.rxkotlin.utils.unsubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent
 import org.jetbrains.anko.*
@@ -89,7 +89,7 @@ class DebounceSearchEmitterFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _subscription.unsubscribeIfNotNull()
+        _subscription.unSubscribeIfNotNull()
     }
 
     fun onClearLog() {

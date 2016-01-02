@@ -10,9 +10,9 @@ import rx.subscriptions.CompositeSubscription
 fun Context.spf(value: Float): Float = (value * (resources?.displayMetrics?.scaledDensity ?: 0f))
 fun Context.spf(value: Int): Float = (value * (resources?.displayMetrics?.scaledDensity ?: 0f))
 
-fun Subscription?.unsubscribeIfNotNull() {
+fun Subscription?.unSubscribeIfNotNull() {
     this?.unsubscribe()
 }
 
-fun  getNewCompositeSubIfUnsubscribed(subscription: CompositeSubscription) =
+fun getNewCompositeSubIfUnSubscribed(subscription: CompositeSubscription) =
     if (subscription.isUnsubscribed) CompositeSubscription() else subscription

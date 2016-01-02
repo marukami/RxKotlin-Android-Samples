@@ -13,7 +13,7 @@ import android.widget.ListView
 import android.widget.ProgressBar
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.utils.spf
-import au.com.tilbrook.android.rxkotlin.utils.unsubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.dip
@@ -74,7 +74,7 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _subscription.unsubscribeIfNotNull()
+        _subscription.unSubscribeIfNotNull()
     }
 
     fun startLongOperation() {

@@ -18,8 +18,8 @@ import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 
 import android.os.Looper.getMainLooper
-import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnsubscribed
-import au.com.tilbrook.android.rxkotlin.utils.unsubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
+import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 
 class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.IAmYourMaster {
 
@@ -78,7 +78,7 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
     override fun onResume() {
         super.onResume()
-        _subscriptions = getNewCompositeSubIfUnsubscribed(_subscriptions)
+        _subscriptions = getNewCompositeSubIfUnSubscribed(_subscriptions)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -94,7 +94,7 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
     override fun onPause() {
         super.onPause()
-        _subscriptions.unsubscribeIfNotNull()
+        _subscriptions.unSubscribeIfNotNull()
     }
 
     private fun _setupLogger() {
