@@ -6,12 +6,14 @@ import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.ProgressBar
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.utils.spf
+import au.com.tilbrook.android.rxkotlin.utils.unsubscribeIfNotNull
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.dip
@@ -32,13 +34,6 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
     private lateinit var _adapter: LogAdapter
     private lateinit var _logs: MutableList<String>
     private var _subscription: Subscription? = null
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (_subscription != null) {
-            _subscription!!.unsubscribe()
-        }
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -66,7 +61,7 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
                        }
                    }
                    _progress = progressBar {
-                       visibility = View.INVISIBLE
+                       visibility = INVISIBLE
                        lparams {
                            leftMargin = dip(20)
                        }
@@ -77,13 +72,20 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
        }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        _subscription.unsubscribeIfNotNull()
+    }
+
     fun startLongOperation() {
 
         _progress.visibility = View.VISIBLE
         _log("Button Clicked")
 
-        _subscription = _getObservable()//
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(_getObserver())                             // Observer
+        _subscription = _getObservable()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(_getObserver())
     }
 
     private fun _getObservable(): Observable<Boolean> {
@@ -104,17 +106,18 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
      * 3. onNext
      */
     private fun _getObserver(): Observer<Boolean> {
+
         return object : Observer<Boolean> {
 
             override fun onCompleted() {
                 _log("On complete")
-                _progress!!.visibility = View.INVISIBLE
+                _progress.visibility = INVISIBLE
             }
 
             override fun onError(e: Throwable) {
                 Timber.e(e, "Error in RxJava Demo concurrency")
-                _log("Boo! Error %s".format(e.getMessage()))
-                _progress!!.visibility = View.INVISIBLE
+                _log("Boo! Error %s".format(e.message))
+                _progress.visibility = INVISIBLE
             }
 
             override fun onNext(bool: Boolean?) {

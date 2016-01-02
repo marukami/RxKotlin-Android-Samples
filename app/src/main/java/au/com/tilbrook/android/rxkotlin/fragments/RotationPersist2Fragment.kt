@@ -94,7 +94,7 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
     override fun onPause() {
         super.onPause()
-        unsubscribeIfNotNull(_subscriptions)
+        _subscriptions.unsubscribeIfNotNull()
     }
 
     private fun _setupLogger() {
@@ -117,7 +117,6 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
     }
 
     companion object {
-
-        val FRAG_TAG = RotationPersist2WorkerFragment::class.java!!.getName()
+        val FRAG_TAG = RotationPersist2WorkerFragment::class.java.name
     }
 }

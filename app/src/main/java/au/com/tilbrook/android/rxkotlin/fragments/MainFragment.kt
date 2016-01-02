@@ -24,19 +24,19 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_schedulers) {
                         style { R.style.buttons }
                         onClick {
-                            clickedOn(ConcurrencyWithSchedulersDemoFragment())
+                            clickedOn( ConcurrencyWithSchedulersDemoFragment() )
                         }
                     }
                     button (R.string.btn_demo_buffer) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn ( BufferDemoFragment() )
+                            clickedOn ( BufferDemoFragment() )
                         }
                     }
                     button (R.string.btn_demo_debounce) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(DebounceSearchEmitterFragment())
+                            clickedOn(DebounceSearchEmitterFragment())
                         }
                     }
                     button (R.string.btn_demo_retrofit) {
