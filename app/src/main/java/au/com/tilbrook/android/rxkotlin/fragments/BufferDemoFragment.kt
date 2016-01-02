@@ -68,13 +68,12 @@ class BufferDemoFragment : BaseFragment() {
                 textView(R.string.msg_demo_buffer) {
                     lparams (width = matchParent)
                     padding = dip(10)
-                    gravity = Gravity.CENTER
-                }
+                }.gravity = Gravity.CENTER
                 _tapBtn = button(R.string.tap_me) {
                     lparams (width = matchParent) {
                         horizontalMargin = dip(90)
                     }
-                    textSize = sp(16) * 1.0f
+                    textSize = 16f
                 }
                 _logsList = listView {
                     lparams(height = matchParent, width = matchParent)

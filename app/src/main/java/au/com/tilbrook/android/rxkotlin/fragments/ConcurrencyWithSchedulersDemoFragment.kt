@@ -4,16 +4,19 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
 import android.widget.ProgressBar
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.utils.spf
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import org.jetbrains.anko.support.v4.dip
@@ -45,14 +48,15 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
                               savedInstanceState: Bundle?): View? {
        return with(ctx) {
            verticalLayout {
-               textView {
-                   lparams ( width = matchParent )
-                   text = getString(R.string.msg_demo_concurrency_schedulers)
-               }
+               textView(R.string.msg_demo_concurrency_schedulers) {
+                   lparams (width = matchParent)
+                   padding = dip(10)
+               }.gravity = Gravity.CENTER
                linearLayout {
+                   orientation = HORIZONTAL
                    button {
                        text = "Start long operation"
-                       textSize = spf(16f)
+                       textSize = 16f
                        lparams {
                            leftMargin = dip(16)
                        }
@@ -67,7 +71,9 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
                        }
                    }
                }
-               _logsList = listView()
+               _logsList = listView {
+                   lparams(width = matchParent, height = matchParent)
+               }
            }
        }
     }

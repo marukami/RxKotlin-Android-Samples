@@ -14,7 +14,6 @@ import android.widget.EditText
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.utils.spf
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import com.jakewharton.rxbinding.widget.RxTextView
 import com.jakewharton.rxbinding.widget.TextViewTextChangeEvent
@@ -69,7 +68,7 @@ class DebounceSearchEmitterFragment : BaseFragment() {
                             height = matchParent
                             width = 0
                         }
-                        textSize = spf(16)
+                        textSize = 16f
                         hint = "Enter some search text"
                         inputType = EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                     }

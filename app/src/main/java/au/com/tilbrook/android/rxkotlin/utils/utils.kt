@@ -7,8 +7,6 @@ import rx.subscriptions.CompositeSubscription
 /**
  * Created by Mitchell Tilbrook on 28/10/15.
  */
-fun Context.spf(value: Float): Float = (value * (resources?.displayMetrics?.scaledDensity ?: 0f))
-fun Context.spf(value: Int): Float = (value * (resources?.displayMetrics?.scaledDensity ?: 0f))
 
 fun Subscription?.unSubscribeIfNotNull() {
     this?.unsubscribe()
