@@ -42,7 +42,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_retrofit) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(RetrofitFragment())
+                            clickedOn(RetrofitFragment())
                         }
                     }
                     button (R.string.btn_demo_double_binding_textview) {
