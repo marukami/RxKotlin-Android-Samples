@@ -48,7 +48,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_double_binding_textview) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(DoubleBindingTextViewFragment())
+                            clickedOn(DoubleBindingTextViewFragment())
                         }
                     }
                     button (R.string.btn_demo_rxbus) {
