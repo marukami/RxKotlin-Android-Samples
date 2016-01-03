@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import au.com.tilbrook.android.rxkotlin.R
+import au.com.tilbrook.android.rxkotlin.rxbus.RxBusDemoFragment
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 
@@ -54,7 +55,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_rxbus) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(new RxBusDemoFragment())
+                            clickedOn(RxBusDemoFragment())
                         }
                     }
                     button (R.string.btn_demo_form_validation_combinel) {

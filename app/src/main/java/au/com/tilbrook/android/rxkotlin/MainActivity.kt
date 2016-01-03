@@ -7,20 +7,19 @@ import android.support.v7.app.AppCompatActivity
 import au.com.tilbrook.android.rxkotlin.fragments.MainFragment
 import au.com.tilbrook.android.rxkotlin.fragments.RotationPersist1WorkerFragment
 import au.com.tilbrook.android.rxkotlin.fragments.RotationPersist2WorkerFragment
+import au.com.tilbrook.android.rxkotlin.rxbus.RxBus
 
 class MainActivity : FragmentActivity() {
 
-//    private var _rxBus: RxBus? = null
+    private var _rxBus: RxBus? = null
 
-    // This is better done with a DI Library like Dagger
-//    val rxBusSingleton: RxBus
-//        get() {
-//            if (_rxBus == null) {
-//                _rxBus = RxBus()
-//            }
-//
-//            return _rxBus
-//        }
+    //     This is better done with a DI Library like Dagger
+    val rxBusSingleton: RxBus
+        get() {
+            val res = _rxBus ?: RxBus()
+            if(_rxBus == null) _rxBus = res
+            return res;
+        }
 
     override fun onBackPressed() {
         super.onBackPressed()
