@@ -60,7 +60,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_form_validation_combinel) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(FormValidationCombineLatestFragment())
+                            clickedOn(FormValidationCombineLatestFragment())
                         }
                     }
                     button (R.string.btn_demo_pseudocache) {
