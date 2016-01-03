@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout.HORIZONTAL
@@ -70,7 +71,7 @@ class DebounceSearchEmitterFragment : BaseFragment() {
                         }
                         textSize = 16f
                         hint = "Enter some search text"
-                        inputType = EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                        inputType = TYPE_TEXT_FLAG_NO_SUGGESTIONS
                     }
                     imageButton (android.R.drawable.ic_menu_close_clear_cancel) {
                         lparams(width = 0, weight = 1f)

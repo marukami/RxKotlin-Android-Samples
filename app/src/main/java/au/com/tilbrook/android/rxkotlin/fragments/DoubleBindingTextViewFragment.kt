@@ -1,6 +1,8 @@
 package au.com.tilbrook.android.rxkotlin.fragments
 
 import android.os.Bundle
+import android.text.InputType
+import android.text.InputType.TYPE_CLASS_NUMBER
 import android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
 import android.text.TextUtils.isEmpty
 import android.view.Gravity.CENTER
@@ -28,6 +30,9 @@ class DoubleBindingTextViewFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+
+        val listener = __TextWatcher()
+
         val layout = with(ctx) {
             verticalLayout {
                 textView(R.string.msg_demo_doublebinding){
@@ -39,13 +44,10 @@ class DoubleBindingTextViewFragment : BaseFragment() {
                         topMargin = dip(10)
                     }
 
-                    val listener = __TextWatcher()
-                    listener.afterTextChanged { onNumberChanged() }
-
                     orientation = HORIZONTAL
                     _number1 = editText("100") {
                         lparams(width = 0, height = dip(50), weight = 1f)
-                        inputType = TYPE_NUMBER_FLAG_DECIMAL
+                        inputType = TYPE_CLASS_NUMBER or TYPE_NUMBER_FLAG_DECIMAL
                         addTextChangedListener(listener)
                     }
                     _number1.gravity = CENTER
@@ -54,7 +56,7 @@ class DoubleBindingTextViewFragment : BaseFragment() {
                     }.gravity = CENTER
                     _number2 = editText("8") {
                         lparams(width = 0, height = dip(50), weight = 1f)
-                        inputType = TYPE_NUMBER_FLAG_DECIMAL
+                        inputType = TYPE_CLASS_NUMBER or TYPE_NUMBER_FLAG_DECIMAL
                         addTextChangedListener(listener)
                     }
                     _number2.gravity = CENTER
@@ -74,6 +76,7 @@ class DoubleBindingTextViewFragment : BaseFragment() {
             .asObservable()
             .subscribe { aFloat -> _result.text = aFloat.toString() }
 
+        listener.afterTextChanged { onNumberChanged()}
         onNumberChanged()
         _number2.requestFocus()
 
@@ -82,16 +85,11 @@ class DoubleBindingTextViewFragment : BaseFragment() {
 
     //    @OnTextChanged(R.id.double_binding_num1, R.id.double_binding_num2)
     fun onNumberChanged() {
-        var num1 = 0f
-        var num2 = 0f
 
-        if (!isEmpty(_number1.text.toString())) {
-            num1 = java.lang.Float.parseFloat(_number1.text.toString())
-        }
-
-        if (!isEmpty(_number2.text.toString())) {
-            num2 = java.lang.Float.parseFloat(_number2.text.toString())
-        }
+        val num1str = _number1.text.toString()
+        val num1 = if (!isEmpty(num1str)) num1str.toFloat() else 0f
+        val num2str = _number2.text.toString()
+        val num2 = if (!isEmpty(num2str)) num2str.toFloat() else 0f
 
         _resultEmitterSubject.onNext(num1 + num2)
     }
