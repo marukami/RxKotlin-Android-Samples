@@ -18,8 +18,3 @@ fun Subscription?.unSubscribeIfNotNull() {
 
 fun getNewCompositeSubIfUnSubscribed(subscription: CompositeSubscription) =
     if (subscription.isUnsubscribed) CompositeSubscription() else subscription
-
-
-inline fun View.colorInt(colorInt: View.() -> Int): Int {
-    return ContextCompat.getColor(this.context, this.colorInt())
-}

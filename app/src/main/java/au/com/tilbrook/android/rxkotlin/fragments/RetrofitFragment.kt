@@ -135,7 +135,7 @@ class RetrofitFragment : Fragment() {
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<java.util.List<Contributor>> {
+                .subscribe(object : Observer<MutableList<Contributor>> {
                     override fun onCompleted() {
                         Timber.d("Retrofit call 1 completed")
                     }
@@ -145,7 +145,7 @@ class RetrofitFragment : Fragment() {
                             "woops we got an error while getting the list of contributors")
                     }
 
-                    override fun onNext(contributors: java.util.List<Contributor>) {
+                    override fun onNext(contributors: MutableList<Contributor>) {
                         for (c in contributors) {
                             _adapter.add("%s has made %d contributions to %s".format(c.login, c.contributions, _contributorsRepo.text.toString()))
 

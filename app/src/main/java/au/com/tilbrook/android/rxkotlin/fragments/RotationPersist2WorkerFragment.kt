@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment
 import java.util.concurrent.TimeUnit
 
 import au.com.tilbrook.android.rxkotlin.MainActivity
+import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import rx.Observable
 import rx.Subscription
 import rx.functions.Func1
@@ -49,14 +50,10 @@ class RotationPersist2WorkerFragment : Fragment() {
         // Retain this fragment across configuration changes.
         retainInstance = true
 
-        _storedIntsSubscription = //
-                Observable.interval(1, TimeUnit.SECONDS)//
-                        .map(object : Func1<Long, Int> {
-                            override fun call(aLong: Long?): Int? {
-                                return aLong!!.toInt()
-                            }
-                        })//
-                        .take(20)//
+        _storedIntsSubscription =
+                Observable.interval(1, TimeUnit.SECONDS)
+                        .map({ aLong -> aLong.toInt() })
+                        .take(20)
                         .subscribe(_intStream)
     }
 
@@ -79,7 +76,7 @@ class RotationPersist2WorkerFragment : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        _storedIntsSubscription!!.unsubscribe()
+        _storedIntsSubscription.unSubscribeIfNotNull()
     }
 
     interface IAmYourMaster {

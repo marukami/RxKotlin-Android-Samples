@@ -39,14 +39,14 @@ class MainActivity : FragmentActivity() {
 
     private fun _removeWorkerFragments() {
         var frag: Fragment? = supportFragmentManager
-                .findFragmentByTag(RotationPersist1WorkerFragment::class.java!!.name)
+                .findFragmentByTag(RotationPersist1WorkerFragment::class.java.name)
 
         if (frag != null) {
             supportFragmentManager.beginTransaction().remove(frag).commit()
         }
 
         frag = supportFragmentManager
-                .findFragmentByTag(RotationPersist2WorkerFragment::class.java!!.name)
+                .findFragmentByTag(RotationPersist2WorkerFragment::class.java.name)
 
         if (frag != null) {
             supportFragmentManager.beginTransaction().remove(frag).commit()

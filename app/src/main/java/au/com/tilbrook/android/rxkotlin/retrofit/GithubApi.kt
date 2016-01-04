@@ -18,21 +18,12 @@ interface GithubApi {
      */
     @GET("/repos/{owner}/{repo}/contributors")
     fun contributors(@Path("owner") owner: String,
-                     @Path("repo") repo: String): Observable<java.util.List<Contributor>>
-
-    @GET("/repos/{owner}/{repo}/contributors")
-    fun getContributors(@Path("owner") owner: String, @Path("repo") repo: String): java.util.List<Contributor>
+                     @Path("repo") repo: String): Observable<MutableList<Contributor>>
 
     /**
      * See https://developer.github.com/v3/users/
      */
     @GET("/users/{user}")
     fun user(@Path("user") user: String): Observable<User>
-
-    /**
-     * See https://developer.github.com/v3/users/
-     */
-    @GET("/users/{user}")
-    fun getUser(@Path("user") user: String): User
 }
 
