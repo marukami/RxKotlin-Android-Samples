@@ -67,7 +67,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_pseudocache) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(PseudoCacheMergeFragment())
+                            clickedOn(PseudoCacheMergeFragment())
                         }
                     }
                     button (R.string.btn_demo_timing) {
