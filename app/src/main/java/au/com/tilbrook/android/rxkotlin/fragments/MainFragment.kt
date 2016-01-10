@@ -73,7 +73,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_timing) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(TimingDemoFragment())
+                            clickedOn(TimingDemoFragment())
                         }
                     }
                     button (R.string.btn_demo_exponential_backoff) {
