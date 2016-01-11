@@ -79,7 +79,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_exponential_backoff) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(ExponentialBackoffFragment())
+                            clickedOn(ExponentialBackoffFragment())
                         }
                     }
                     button (R.string.btn_demo_rotation_persist) {

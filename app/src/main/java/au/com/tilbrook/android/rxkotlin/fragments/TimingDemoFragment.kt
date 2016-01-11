@@ -183,10 +183,10 @@ class TimingDemoFragment : BaseFragment() {
         _subscription2 = null
     }
 
-    inline fun Subscription?.isNotNullAndIsNotUnsubscribed(fn: Subscription?.() -> Unit): Boolean {
+    inline fun Subscription?.isNotNullAndIsNotUnsubscribed(fn: () -> Unit): Boolean {
         val res = this?.isUnsubscribed?.not() != null
         if (res) {
-            this.fn()
+            fn()
             this.unSubscribeIfNotNull()
         }
         return res
