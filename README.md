@@ -1,9 +1,18 @@
-Learning RxJava for Android by example
+Learning RxKotlin for Android by example
 ==============
 
-This is a repository with real-world useful examples of using RxJava with Android. [It usually will be in a constant state of "Work in Progress" (WIP)](http://nerds.weddingpartyapp.com/tech/2014/09/15/learning-rxjava-with-android-by-example/).
+This is a rewrite of [RxJava-Android-Samples by Kaushik Gopal](https://github.com/kaushikgopal/RxJava-Android-Samples) in Kotlin
 
-I also gave a talk at a local meetup about warming up to RxJava here. Here's a link to the [video and slides](https://newcircle.com/s/post/1744/2015/06/29/learning-rxjava-for-android-by-example).
+Just like Kaushik, RxJava samples. This repository is filled with useful real-world examples of using RxJava with Android. [It's usually in a constant state of "Work in Progress" (WIP)](http://nerds.weddingpartyapp.com/tech/2014/09/15/learning-rxjava-with-android-by-example/).
+
+Kaushik also gave a talk at the San Francisco Android User Group about warming up to RxJava. Here is a link to the [video and slides](https://newcircle.com/s/post/1744/2015/06/29/learning-rxjava-for-android-by-example).
+
+# Why a new repository and not a fork
+
+I wanted to have the freedom to Kotlin-ize the examples. I also wanted to replace ButterKnife and xml
+layouts with Anko. Lastly it was a good opportunity to get to know the RxJava examples in more detail and also learn both Kotlin and Anko
+
+I will try and keep in sync with the examples in the [Java repo](https://github.com/kaushikgopal/RxJava-Android-Samples)
 
 ## Examples:
 
@@ -25,7 +34,7 @@ If you hit the button once, you'll get a message saying the button was hit once.
 
 Note:
 
-If you're looking for a more foolproof solution that accumulates "continuous" taps vs just the number of taps within a time span, look at the [EventBus Demo](https://github.com/kaushikgopal/Android-RxJava/blob/master/app/src/main/java/com/morihacky/android/rxjava/rxbus/RxBusDemo_Bottom3Fragment.java) where a combo of the `publish` and `buffer` operators is used. For a more detailed explanation, you can also have a look at this [blog post](http://nerds.weddingpartyapp.com/tech/2015/01/05/debouncedbuffer-used-in-rxbus-example/).
+If you're looking for a more foolproof solution that accumulates "continuous" taps vs just the number of taps within a time span, look at the [EventBus Demo](https://github.com/marukami/RxKotlin-Android-Samples/blob/master/app/src/main/java/au/com/tilbrook/android/rxkotlin/rxbus/rxbus/RxBusDemo_Bottom3Fragment.java) where a combo of the `publish` and `buffer` operators is used. For a more detailed explanation, you can also have a look at this [blog post](http://nerds.weddingpartyapp.com/tech/2015/01/05/debouncedbuffer-used-in-rxbus-example/).
 
 ### Instant/Auto searching (subject + debounce)
 
