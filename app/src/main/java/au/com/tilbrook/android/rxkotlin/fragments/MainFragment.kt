@@ -85,7 +85,7 @@ class MainFragment : BaseFragment() {
                     button (R.string.btn_demo_rotation_persist) {
                         style { R.style.buttons }
                         onClick {
-//                            clickedOn(RotationPersist2Fragment())
+                            clickedOn(RotationPersist2Fragment())
                         }
                     }
                 }

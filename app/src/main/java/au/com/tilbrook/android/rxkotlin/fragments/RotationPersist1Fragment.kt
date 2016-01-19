@@ -42,7 +42,7 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
 
         val fm = activity.supportFragmentManager
         var frag: RotationPersist1WorkerFragment? = //
-                fm.findFragmentByTag(FRAG_TAG) as RotationPersist1WorkerFragment
+                fm.findFragmentByTag(FRAG_TAG) as? RotationPersist1WorkerFragment
 
         if (frag == null) {
             frag = RotationPersist1WorkerFragment()

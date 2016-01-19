@@ -18,28 +18,32 @@ import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 
 import android.os.Looper.getMainLooper
+import android.view.Gravity
+import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
+import org.jetbrains.anko.*
+import org.jetbrains.anko.support.v4.ctx
 
 class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.IAmYourMaster {
 
-    private val _logList: ListView? = null
+    private lateinit var _logList: ListView
 
-    private var _adapter: LogAdapter? = null
-    private var _logs: MutableList<String>? = null
+    private lateinit var _adapter: LogAdapter
+    private lateinit var _logs: MutableList<String>
 
     private var _subscriptions = CompositeSubscription()
 
     // -----------------------------------------------------------------------------------
 
-//    @OnClick(R.id.btn_rotate_persist)
-    fun startOperationFromWorkerFrag() {
+    //    @OnClick(R.id.btn_rotate_persist)
+    val startOperationFromWorkerFrag = { v:View? ->
         _logs = ArrayList<String>()
-        _adapter!!.clear()
+        _adapter.clear()
 
         val fm = activity.supportFragmentManager
-        var frag: RotationPersist2WorkerFragment? = //
-                fm.findFragmentByTag(FRAG_TAG) as RotationPersist2WorkerFragment
+        var frag: RotationPersist2WorkerFragment? =
+            fm.findFragmentByTag(FRAG_TAG) as? RotationPersist2WorkerFragment
 
         if (frag == null) {
             frag = RotationPersist2WorkerFragment()
@@ -47,16 +51,16 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
         } else {
             Timber.d("Worker frag already spawned")
         }
+
+        Unit
     }
 
     override fun setStream(intStream: Observable<Int>) {
 
         _subscriptions.add(//
-                intStream.doOnSubscribe(object : Action0 {
-                    override fun call() {
-                        _log("Subscribing to intsObservable")
-                    }
-                }).subscribe(object : Observer<Int> {
+            intStream
+                .doOnSubscribe { _log("Subscribing to intsObservable") }
+                .subscribe(object : Observer<Int> {
                     override fun onCompleted() {
                         _log("Observable is complete")
                     }
@@ -69,7 +73,8 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
                     override fun onNext(integer: Int?) {
                         _log("Worker frag spits out - %d".format(integer))
                     }
-                }))
+                })
+        )
     }
 
     // -----------------------------------------------------------------------------------
@@ -89,7 +94,23 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-       return null
+        val layout = with(ctx) {
+            verticalLayout {
+                textView(R.string.msg_demo_rotation_persist) {
+                    lparams(width = matchParent)
+                    this.gravity = Gravity.CENTER
+                    padding = dip(10)
+                }
+                button("Start operation") {
+                    lparams(width = matchParent)
+                    onClick(startOperationFromWorkerFrag)
+                }
+                _logList = listView {
+                    lparams(width = matchParent, height = matchParent)
+                }
+            }
+        }
+        return layout
     }
 
     override fun onPause() {
@@ -100,19 +121,16 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
     private fun _setupLogger() {
         _logs = ArrayList<String>()
         _adapter = LogAdapter(activity, ArrayList<String>())
-        _logList!!.adapter = _adapter
+        _logList.adapter = _adapter
     }
 
     private fun _log(logMsg: String) {
-        _logs!!.add(0, logMsg)
+        _logs.add(0, logMsg)
 
         // You can only do below stuff on main thread.
-        Handler(getMainLooper()).post(object : Runnable {
-
-            override fun run() {
-                _adapter!!.clear()
-                _adapter!!.addAll(_logs)
-            }
+        Handler(getMainLooper()).post({
+            _adapter.clear()
+            _adapter.addAll(_logs)
         })
     }
 
