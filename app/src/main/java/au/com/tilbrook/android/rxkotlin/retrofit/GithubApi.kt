@@ -1,7 +1,7 @@
 package au.com.tilbrook.android.rxkotlin.retrofit
 
-import retrofit.http.GET
-import retrofit.http.Path
+import retrofit2.http.GET
+import retrofit2.http.Path
 import rx.Observable
 
 /**

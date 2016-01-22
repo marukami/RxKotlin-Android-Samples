@@ -12,23 +12,20 @@ import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
 import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
-import com.squareup.okhttp.Interceptor
-import com.squareup.okhttp.OkHttpClient
-import com.squareup.okhttp.Response
+import okhttp3.Interceptor
+import okhttp3.OkHttpClient
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
-import retrofit.GsonConverterFactory
-import retrofit.Retrofit
-import retrofit.RxJavaCallAdapterFactory
+import retrofit2.GsonConverterFactory
+import retrofit2.Retrofit
+import retrofit2.RxJavaCallAdapterFactory
+import rx.Observable
 import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Func1
+import rx.schedulers.Schedulers
 import timber.log.Timber
 import java.util.*
-import rx.Observable
-import rx.schedulers.Schedulers
-import java.io.IOException
 
 
 class PseudoCacheMergeFragment : BaseFragment() {
