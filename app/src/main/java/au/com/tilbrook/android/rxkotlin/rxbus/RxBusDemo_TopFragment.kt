@@ -32,7 +32,7 @@ class RxBusDemo_TopFragment : BaseFragment() {
                 }
                 button("Tap") {
                     lparams (height = dip(90), width = dip(90), gravity = CENTER)
-                    background = getDrawable(R.drawable.btn_round)
+                    backgroundResource = R.drawable.btn_round
                     textSize = 24f
                     textColor = colorInt { android.R.color.white }
                     onClick (onTapButtonClicked)
