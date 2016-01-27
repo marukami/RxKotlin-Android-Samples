@@ -15,6 +15,7 @@ import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
 import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
+import au.com.tilbrook.android.rxkotlin.retrofit.GithubService
 import au.com.tilbrook.android.rxkotlin.retrofit.User
 import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
@@ -42,13 +43,14 @@ class RetrofitFragment : Fragment() {
     private lateinit var _userInfoRepo: EditText
     private lateinit var _resultList: ListView
 
-    private lateinit var _api: GithubApi
+    private lateinit var _githubService: GithubApi
     private lateinit var _adapter: ArrayAdapter<String>
     private var _subscriptions = CompositeSubscription()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _api = _createGithubApi()
+        val githubToken = getResources().getString(R.string.github_oauth_token);
+        _githubService = GithubService.createGithubService(githubToken)
     }
 
     override fun onResume() {
@@ -129,7 +131,7 @@ class RetrofitFragment : Fragment() {
         _adapter.clear()
 
         _subscriptions.add(
-            _api.contributors(_contributorsUsername.text.toString(), _contributorsRepo.text.toString())
+            _githubService.contributors(_contributorsUsername.text.toString(), _contributorsRepo.text.toString())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -159,11 +161,11 @@ class RetrofitFragment : Fragment() {
     private val onListContributorsWithFullUserInfoClicked = { v: View? ->
         _adapter.clear()
 
-        _subscriptions.add(_api.contributors(_contributorsUsername.text.toString(),
+        _subscriptions.add(_githubService.contributors(_contributorsUsername.text.toString(),
             _contributorsRepo.text.toString())
             .flatMap { contributors -> Observable.from(contributors) }
             .flatMap { contributor ->
-                val _userObservable = _api.user(contributor.login).filter { user -> !isEmpty(user.name) && !isEmpty(user.email) }
+                val _userObservable = _githubService.user(contributor.login).filter { user -> !isEmpty(user.name) && !isEmpty(user.email) }
 
                 Observable.zip(_userObservable,
                     Observable.just(contributor),
@@ -200,31 +202,4 @@ class RetrofitFragment : Fragment() {
             }))
     }
 
-    // -----------------------------------------------------------------------------------
-
-    private fun _createGithubApi(): GithubApi {
-
-        val builder = Retrofit.Builder()
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://api.github.com/")
-            //.setLogLevel(RestAdapter.LogLevel.FULL);
-
-        val githubToken = resources.getString(R.string.github_oauth_token)
-        if (!isEmpty(githubToken)) {
-
-            val client = OkHttpClient()
-            client.interceptors().add(Interceptor {
-                val req = it.request()
-                val newReq = req.newBuilder()
-                    .addHeader("Authorization", "token $githubToken")
-                    .build()
-                it.proceed(newReq)
-            })
-
-            builder.client(client)
-        }
-
-        return builder.build().create(GithubApi::class.java)
-    }
 }

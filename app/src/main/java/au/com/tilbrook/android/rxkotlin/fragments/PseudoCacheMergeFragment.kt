@@ -11,6 +11,7 @@ import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
 import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
+import au.com.tilbrook.android.rxkotlin.retrofit.GithubService
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -142,35 +143,11 @@ class PseudoCacheMergeFragment : BaseFragment() {
     }
 
     private fun _getFreshData(): Observable<Pair<Contributor, Long>> {
-        return _createGithubApi().contributors("square", "retrofit")
+        val githubToken = resources.getString(R.string.github_oauth_token);
+        val githubService = GithubService.createGithubService(githubToken)
+        return githubService.contributors("square", "retrofit")
             .flatMap { contributors -> Observable.from(contributors) }
             .map { contributor -> Pair(contributor, System.currentTimeMillis()) }
-    }
-
-    private fun _createGithubApi(): GithubApi {
-
-        val builder = Retrofit.Builder()
-            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl("https://api.github.com/")
-        //.setLogLevel(RestAdapter.LogLevel.FULL);
-
-        val githubToken = resources.getString(R.string.github_oauth_token)
-        if (!TextUtils.isEmpty(githubToken)) {
-
-            val client = OkHttpClient()
-            client.interceptors().add(Interceptor {
-                val req = it.request()
-                val newReq = req.newBuilder()
-                    .addHeader("Authorization", "token $githubToken")
-                    .build()
-                it.proceed(newReq)
-            })
-
-            builder.client(client)
-        }
-
-        return builder.build().create(GithubApi::class.java)
     }
 
     private fun _initializeCache() {
