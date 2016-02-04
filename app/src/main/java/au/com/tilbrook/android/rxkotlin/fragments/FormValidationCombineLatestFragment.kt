@@ -14,6 +14,7 @@ import android.widget.EditText
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.TextView
 import au.com.tilbrook.android.rxkotlin.R
+import au.com.tilbrook.android.rxkotlin.utils.backgroundColorByResId
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import com.jakewharton.rxbinding.widget.RxTextView
 import org.jetbrains.anko.*
@@ -21,6 +22,8 @@ import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
 import rx.Observer
 import rx.Subscription
+import rx.functions.Func1
+import rx.functions.Func3
 import timber.log.Timber
 
 class FormValidationCombineLatestFragment : BaseFragment() {
@@ -94,17 +97,20 @@ class FormValidationCombineLatestFragment : BaseFragment() {
             }
         }
 
-        _emailChangeObservable = RxTextView.textChanges(_email).skip(1)
-        _passwordChangeObservable = RxTextView.textChanges(_password).skip(1)
-        _numberChangeObservable = RxTextView.textChanges(_number).skip(1)
-
-        _combineLatestEvents()
+        _emailChangeObservable = RxTextView.textChanges(_email)
+        _passwordChangeObservable = RxTextView.textChanges(_password)
+        _numberChangeObservable = RxTextView.textChanges(_number)
 
         return layout
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStart() {
+        super.onStart()
+        _combineLatestEvents()
+    }
+
+    override fun onStop() {
+        super.onStop()
         _subscription.unSubscribeIfNotNull()
     }
 
@@ -113,34 +119,86 @@ class FormValidationCombineLatestFragment : BaseFragment() {
             _emailChangeObservable,
             _passwordChangeObservable,
             _numberChangeObservable
-        ) { newEmail, newPassword, newNumber ->
-            val emailValid = !isEmpty(newEmail) && EMAIL_ADDRESS.matcher(newEmail).matches()
-            if (!emailValid) {
-                _email.error = "Invalid Email!"
-            }
+        ) { newEmail, newPassword, newNumber -> Form(newEmail, newPassword, newNumber) }
+            .onBackpressureDrop()
+            .skipWhile(FormIsClean())
+            .map { form ->
+                form.whenNotTrue(form.isEmailValid) {
+                    _email.error = "Invalid Email!"
+                }
+                form.whenNotTrue(form.isPasswordValid) {
+                    _password.error = "Invalid Password!"
+                }
+                form.whenNotTrue(form.isNumberValid) {
+                    _number.error = "Invalid Number!"
+                }
 
-            val passValid = !isEmpty(newPassword) && newPassword.length > 8
-            if (!passValid) {
-                _password.error = "Invalid Password!"
-            }
-
-            var numValid = !isEmpty(newNumber)
-            if (numValid) {
-                val num = Integer.parseInt(newNumber.toString())
-                numValid = num > 0 && num <= 100
-            }
-            if (!numValid) {
-                _number.error = "Invalid Number!"
-            }
-
-            emailValid && passValid && numValid
-        }.subscribe(
-            { formValid ->
-                val color = if(formValid) R.color.blue else R.color.gray
-                _btnValidIndicator.setBackgroundColor(ContextCompat.getColor(ctx, color))
+                form.valid
+            }.subscribe(
+            { isValid ->
+                _btnValidIndicator.backgroundColorByResId =
+                    if (isValid) R.color.blue
+                    else R.color.gray
             },
             { Timber.e(it, "there was an error") },
-            { Timber.d("completed")}
-        )
+            { Timber.d("completed") })
+    }
+
+    private class FormIsClean : Func1<Form, Boolean> {
+
+        private var isDirty = false
+
+        override fun call(formValidator: Form): Boolean? {
+            if (!isDirty) {
+                isDirty = formValidator.allFieldsDirty
+            }
+            return !isDirty
+        }
+    }
+
+    class Form(
+        private val newEmail: CharSequence,
+        private val newPassword: CharSequence,
+        private val newNumber: CharSequence
+    ) {
+        val isEmailValid: Boolean
+        val isNumberValid: Boolean
+        val isPasswordValid: Boolean
+        val valid: Boolean
+        val allFieldsDirty: Boolean
+
+        init {
+            isEmailValid = isEmpty(newEmail).not() && EMAIL_ADDRESS.matcher(newEmail).matches()
+            isPasswordValid = isEmpty(newPassword).not() && newPassword.length > 8
+            isNumberValid = isEmpty(newNumber).not() && isBetween(
+                start = 0,
+                mid = {
+                    newNumber.toString().
+                        toNumberOrDefault(String::toInt, 0) as Int
+                },
+                end = 100
+            )
+            valid = isEmailValid and isNumberValid and isPasswordValid
+            allFieldsDirty = !isEmpty(newEmail) and !isEmpty(newPassword) and !isEmpty(newNumber)
+        }
+
+        inline fun isBetween(mid: () -> Int, start: Int, end: Int): Boolean {
+            return (mid() > start) and (mid() <= end)
+        }
+    }
+
+    inline fun Form.whenNotTrue(bool: Boolean, whenInvalid: Form.() -> Unit) {
+        if (bool.not()) {
+            whenInvalid()
+        }
+    }
+}
+
+inline fun String.toNumberOrDefault(cast: String.() -> Number, default: Number):
+    Number {
+    try {
+        return this.cast()
+    } catch (ex: NumberFormatException) {
+        return default;
     }
 }
