@@ -10,37 +10,35 @@ import android.view.View
 import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.LinearLayout
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
 import android.widget.ProgressBar
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
-import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
-import org.jetbrains.anko.support.v4.dip
-import java.util.ArrayList
 import rx.Observable
 import rx.Observer
-import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Func1
 import rx.schedulers.Schedulers
+import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
+import java.util.*
 
 class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
 
-    lateinit var _progress: ProgressBar
-    lateinit var _logsList: ListView
+    private lateinit var _progress: ProgressBar
+    private lateinit var _logsList: ListView
 
     private lateinit var _adapter: LogAdapter
     private lateinit var _logs: MutableList<String>
-    private var _subscription: Subscription? = null
+    private lateinit var _subscription: CompositeSubscription
+
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         _setupLogger()
+        _subscription = CompositeSubscription()
     }
 
     override fun onCreateView(inflater: LayoutInflater?,
@@ -78,20 +76,20 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
        }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _subscription.unSubscribeIfNotNull()
+    override fun onPause() {
+        super.onPause()
+        _subscription.clear()
     }
 
     fun startLongOperation() {
-
         _progress.visibility = View.VISIBLE
         _log("Button Clicked")
 
-        _subscription = _getObservable()
+        _subscription.add(_getObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(_getObserver())
+        )
     }
 
     private fun _getObservable(): Observable<Boolean> {
