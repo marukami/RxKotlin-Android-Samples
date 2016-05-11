@@ -1,7 +1,6 @@
 package au.com.tilbrook.android.rxkotlin.fragments
 
 import android.os.Bundle
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +9,10 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
-import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
 import au.com.tilbrook.android.rxkotlin.retrofit.GithubService
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
-import retrofit2.GsonConverterFactory
-import retrofit2.Retrofit
-import retrofit2.RxJavaCallAdapterFactory
 import rx.Observable
 import rx.Subscriber
 import rx.Subscription

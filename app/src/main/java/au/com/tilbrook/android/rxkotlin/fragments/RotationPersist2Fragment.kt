@@ -2,28 +2,21 @@ package au.com.tilbrook.android.rxkotlin.fragments
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.FragmentManager
+import android.os.Looper.getMainLooper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-
-import java.util.ArrayList
-
-import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
-import rx.Observable
-import rx.Observer
-import rx.functions.Action0
-import rx.subscriptions.CompositeSubscription
-import timber.log.Timber
-
-import android.os.Looper.getMainLooper
-import android.view.Gravity
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
-import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
+import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
+import rx.Observable
+import rx.Observer
+import rx.subscriptions.CompositeSubscription
+import timber.log.Timber
+import java.util.*
 
 class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.IAmYourMaster {
 
@@ -81,10 +74,6 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
     // Boilerplate
     // -----------------------------------------------------------------------------------
 
-    override fun onResume() {
-        super.onResume()
-        _subscriptions = getNewCompositeSubIfUnSubscribed(_subscriptions)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -115,7 +104,7 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
     override fun onPause() {
         super.onPause()
-        _subscriptions.unSubscribeIfNotNull()
+        _subscriptions.clear()
     }
 
     private fun _setupLogger() {

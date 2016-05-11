@@ -1,12 +1,11 @@
 package au.com.tilbrook.android.rxkotlin.fragments
 
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.text.InputType.*
 import android.text.TextUtils.isEmpty
 import android.util.Patterns.EMAIL_ADDRESS
-import android.view.Gravity.*
+import android.view.Gravity.CENTER
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,10 +19,8 @@ import com.jakewharton.rxbinding.widget.RxTextView
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
-import rx.Observer
 import rx.Subscription
 import rx.functions.Func1
-import rx.functions.Func3
 import timber.log.Timber
 
 class FormValidationCombineLatestFragment : BaseFragment() {
@@ -197,7 +194,7 @@ class FormValidationCombineLatestFragment : BaseFragment() {
 inline fun String.toNumberOrDefault(cast: String.() -> Number, default: Number):
     Number {
     try {
-        return this.cast()
+        return cast()
     } catch (ex: NumberFormatException) {
         return default;
     }

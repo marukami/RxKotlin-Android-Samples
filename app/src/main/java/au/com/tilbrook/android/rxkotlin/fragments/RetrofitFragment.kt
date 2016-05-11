@@ -17,15 +17,8 @@ import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
 import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
 import au.com.tilbrook.android.rxkotlin.retrofit.GithubService
 import au.com.tilbrook.android.rxkotlin.retrofit.User
-import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
-import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
-import retrofit2.GsonConverterFactory
-import retrofit2.Retrofit
-import retrofit2.RxJavaCallAdapterFactory
 import rx.Observable
 import rx.Observer
 import rx.android.schedulers.AndroidSchedulers
@@ -51,16 +44,6 @@ class RetrofitFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val githubToken = getResources().getString(R.string.github_oauth_token);
         _githubService = GithubService.createGithubService(githubToken)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        _subscriptions = getNewCompositeSubIfUnSubscribed(_subscriptions)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        _subscriptions.unSubscribeIfNotNull()
     }
 
     override fun onCreateView(inflater: LayoutInflater?,
@@ -125,6 +108,11 @@ class RetrofitFragment : Fragment() {
         _resultList.adapter = _adapter
 
         return layout
+    }
+
+    override fun onPause() {
+        super.onPause()
+        _subscriptions.clear()
     }
 
     private val onListContributorsClicked = { v: View? ->

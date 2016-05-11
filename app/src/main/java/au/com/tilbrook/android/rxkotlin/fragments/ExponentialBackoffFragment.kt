@@ -9,16 +9,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
-import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
 import rx.Observer
 import rx.functions.Func1
-import rx.lang.kotlin.flatMapSequence
-import rx.observables.*
+import rx.observables.MathObservable
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import java.util.*
@@ -33,10 +30,6 @@ class ExponentialBackoffFragment : BaseFragment() {
 
     private var _subscriptions = CompositeSubscription()
 
-    override fun onResume() {
-        super.onResume()
-        _subscriptions = getNewCompositeSubIfUnSubscribed(_subscriptions)
-    }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -76,7 +69,7 @@ class ExponentialBackoffFragment : BaseFragment() {
 
     override fun onPause() {
         super.onPause()
-        _subscriptions.unSubscribeIfNotNull()
+        _subscriptions.clear()
     }
 
     // -----------------------------------------------------------------------------------

@@ -45,16 +45,6 @@ class BufferDemoFragment : BaseFragment() {
 
     private var _subscription: Subscription? = null
 
-    override fun onStart() {
-        super.onStart()
-        _subscription = _getBufferedSubscription()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        _subscription.unSubscribeIfNotNull()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         _setupLogger()
@@ -80,6 +70,16 @@ class BufferDemoFragment : BaseFragment() {
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        _subscription = _getBufferedSubscription()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        _subscription.unSubscribeIfNotNull()
     }
 
     // -----------------------------------------------------------------------------------

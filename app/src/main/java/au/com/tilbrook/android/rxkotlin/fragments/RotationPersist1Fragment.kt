@@ -2,29 +2,20 @@ package au.com.tilbrook.android.rxkotlin.fragments
 
 import android.os.Bundle
 import android.os.Handler
-import android.support.v4.app.FragmentManager
+import android.os.Looper.getMainLooper
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-
-import java.util.ArrayList
-
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
-import timber.log.Timber
-
-import android.os.Looper.getMainLooper
-import android.view.Gravity
-import au.com.tilbrook.android.rxkotlin.utils.getNewCompositeSubIfUnSubscribed
-import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
-import org.jetbrains.anko.support.v4.dip
-
-import rx.lang.kotlin.subscriber
 import rx.observables.ConnectableObservable
 import rx.subscriptions.CompositeSubscription
+import timber.log.Timber
+import java.util.*
 
 class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.IAmYourMaster {
 
@@ -80,11 +71,6 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
         _setupLogger()
     }
 
-    override fun onResume() {
-        super.onResume()
-        _subscriptions = getNewCompositeSubIfUnSubscribed(_subscriptions)
-    }
-
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -110,7 +96,7 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
 
     override fun onPause() {
         super.onPause()
-        _subscriptions.unSubscribeIfNotNull()
+        _subscriptions.clear()
     }
 
     private fun _setupLogger() {
@@ -123,18 +109,15 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
         _logs.add(0, logMsg)
 
         // You can only do below stuff on main thread.
-        Handler(getMainLooper()).post(object : Runnable {
-
-            override fun run() {
-                _adapter.clear()
-                _adapter.addAll(_logs)
-            }
-        })
+        Handler(getMainLooper()).post {
+            _adapter.clear()
+            _adapter.addAll(_logs)
+        }
     }
 
     companion object {
 
-        val FRAG_TAG = RotationPersist1WorkerFragment::class.java.getName()
+        val FRAG_TAG = RotationPersist1WorkerFragment::class.java.name
     }
 
 }
