@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.0"
 
     defaultConfig {
         applicationId "au.com.tilbrook.android.rxkotlin"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 1
         versionName "1.0"
     }
@@ -52,8 +52,8 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 }
 buildscript {
-    ext.kotlin_version = '1.0.1-2'
-    ext.support_version = '23.3.0'
+    ext.kotlin_version = '1.0.3'
+    ext.support_version = '24.0.0'
     ext.retrofit_version = '2.0.2'
     repositories {
         mavenCentral()
