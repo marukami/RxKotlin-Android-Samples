@@ -74,7 +74,6 @@ class ExponentialBackoffFragment : BaseFragment() {
 
     // -----------------------------------------------------------------------------------
 
-    //    @OnClick(R.id.btn_eb_retry)
     val startRetryingWithExponentialBackoffStrategy = { v: View? ->
         _logs = ArrayList<String>()
         _adapter.clear()
@@ -84,22 +83,20 @@ class ExponentialBackoffFragment : BaseFragment() {
                 .error<Any>(RuntimeException("testing")) // always fails
                 .retryWhen(RetryWithDelay(5, 1000))
                 .doOnSubscribe { _log("Attempting the impossible 5 times in intervals of 1s") }//
-                .subscribe(object : Observer<Any> {
-                    override fun onCompleted() {
+                .subscribe(
+                        {
+                        Timber.d("on Next")
+                    },
+                    {
+                        _log("Error: I give up!")
+                    },
+                    {
                         Timber.d("on Completed")
                     }
-
-                    override fun onError(e: Throwable) {
-                        _log("Error: I give up!")
-                    }
-
-                    override fun onNext(aVoid: Any) {
-                        Timber.d("on Next")
-                    }
-                }))
+                )
+        )
     }
 
-    //    @OnClick(R.id.btn_eb_delay)
     val startExecutingWithExponentialBackoffDelay = { v: View? ->
 
         _logs = ArrayList<String>()

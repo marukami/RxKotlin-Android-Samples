@@ -61,7 +61,6 @@ class PseudoCacheMergeFragment : BaseFragment() {
         _subscription.unSubscribeIfNotNull()
     }
 
-    //    @OnClick(R.id.btn_start_pseudo_cache)
     val onDemoPseudoCacheClicked = { v: View? ->
         _adapter = ArrayAdapter(activity,
             R.layout.item_log,
@@ -76,23 +75,15 @@ class PseudoCacheMergeFragment : BaseFragment() {
             .subscribeOn(Schedulers.io())
             .unsubscribeOn(AndroidSchedulers.mainThread())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Subscriber<Pair<Contributor, Long>>() {
-                override fun onCompleted() {
-                    Timber.d("done loading all data")
-                }
-
-                override fun onError(e: Throwable) {
-                    Timber.e(e, "arr something went wrong")
-                }
-
-                override fun onNext(contributorAgePair: Pair<Contributor, Long>) {
+            .subscribe(
+                { contributorAgePair ->
                     val contributor = contributorAgePair.first
 
                     if (_resultAgeMap.containsKey(contributor)
                         and
                         ((_resultAgeMap[contributor] ?: 0) > contributorAgePair.second)
                     ) {
-                        return
+                        return@subscribe
                     }
 
                     _contributionMap.put(contributor.login, contributor.contributions)
@@ -100,8 +91,14 @@ class PseudoCacheMergeFragment : BaseFragment() {
 
                     _adapter.clear()
                     _adapter.addAll(listStringFromMap)
+                },
+                {
+                    Timber.e(it, "arr something went wrong")
+                },
+                {
+                    Timber.d("done loading all data")
                 }
-            })
+            )
     }
 
     private val listStringFromMap: List<String>

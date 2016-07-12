@@ -13,7 +13,6 @@ import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
-import rx.Observer
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
 import java.util.*
@@ -30,13 +29,13 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
     // -----------------------------------------------------------------------------------
 
     //    @OnClick(R.id.btn_rotate_persist)
-    val startOperationFromWorkerFrag = { v:View? ->
+    val startOperationFromWorkerFrag = { v: View? ->
         _logs = ArrayList<String>()
         _adapter.clear()
 
         val fm = activity.supportFragmentManager
         var frag: RotationPersist2WorkerFragment? =
-            fm.findFragmentByTag(FRAG_TAG) as? RotationPersist2WorkerFragment
+                fm.findFragmentByTag(FRAG_TAG) as? RotationPersist2WorkerFragment
 
         if (frag == null) {
             frag = RotationPersist2WorkerFragment()
@@ -50,29 +49,22 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
     override fun setStream(intStream: Observable<Int>) {
 
-        _subscriptions.add(//
-            intStream
+        _subscriptions.add(intStream
                 .doOnSubscribe { _log("Subscribing to intsObservable") }
-                .subscribe(object : Observer<Int> {
-                    override fun onCompleted() {
-                        _log("Observable is complete")
-                    }
-
-                    override fun onError(e: Throwable) {
-                        Timber.e(e, "Error in worker demo frag observable")
-                        _log("Dang! something went wrong.")
-                    }
-
-                    override fun onNext(integer: Int?) {
-                        _log("Worker frag spits out - %d".format(integer))
-                    }
+                .subscribe({
+                    _log("Worker frag spits out - %d".format(it))
+                }, {
+                    Timber.e(it, "Error in worker demo frag observable")
+                    _log("Dang! something went wrong.")
+                }, {
+                    _log("Observable is complete")
                 })
         )
     }
 
-    // -----------------------------------------------------------------------------------
-    // Boilerplate
-    // -----------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------
+// Boilerplate
+// -----------------------------------------------------------------------------------
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

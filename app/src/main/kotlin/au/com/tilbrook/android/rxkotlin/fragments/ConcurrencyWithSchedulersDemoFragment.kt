@@ -19,7 +19,6 @@ import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
 import rx.Observer
 import rx.android.schedulers.AndroidSchedulers
-import rx.functions.Func1
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
 import timber.log.Timber
@@ -88,18 +87,16 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
         _subscription.add(_getObservable()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(_getObserver())
+                .subscribe(LongOperationObserver())
         )
     }
 
     private fun _getObservable(): Observable<Boolean> {
-        return Observable.just(true).map(object : Func1<Boolean, Boolean> {
-            override fun call(aBoolean: Boolean?): Boolean? {
-                _log("Within Observable")
-                _doSomeLongOperation_thatBlocksCurrentThread()
-                return aBoolean
-            }
-        })
+        return Observable.just(true).map { aBoolean ->
+            _log("Within Observable")
+            _doSomeLongOperation_thatBlocksCurrentThread()
+            aBoolean
+        }
     }
 
     /**
@@ -109,13 +106,10 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
      * 2. onError
      * 3. onNext
      */
-    private fun _getObserver(): Observer<Boolean> {
+    private inner class LongOperationObserver(): Observer<Boolean> {
 
-        return object : Observer<Boolean> {
-
-            override fun onCompleted() {
-                _log("On complete")
-                _progress.visibility = INVISIBLE
+            override fun onNext(bool: Boolean?) {
+                _log("onNext with return value \"%b\"".format(bool))
             }
 
             override fun onError(e: Throwable) {
@@ -124,10 +118,10 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
                 _progress.visibility = INVISIBLE
             }
 
-            override fun onNext(bool: Boolean?) {
-                _log("onNext with return value \"%b\"".format(bool))
+            override fun onCompleted() {
+                _log("On complete")
+                _progress.visibility = INVISIBLE
             }
-        }
     }
 
     // -----------------------------------------------------------------------------------
