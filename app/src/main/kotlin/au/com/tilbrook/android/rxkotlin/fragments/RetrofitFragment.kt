@@ -4,19 +4,13 @@ package au.com.tilbrook.android.rxkotlin.fragments
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils.isEmpty
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
-import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
-import au.com.tilbrook.android.rxkotlin.retrofit.GithubService
-import au.com.tilbrook.android.rxkotlin.retrofit.User
+import au.com.tilbrook.android.rxkotlin.retrofit.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
@@ -123,7 +117,7 @@ class RetrofitFragment : Fragment() {
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ contributors ->
-                    for (c in contributors) {
+                               contributors.forEach { c ->
                         _adapter.add("%s has made %d contributions to %s".format(c.login, c.contributions, _contributorsRepo.text.toString()))
 
                         Timber.d("%s has made %d contributions to %s",
