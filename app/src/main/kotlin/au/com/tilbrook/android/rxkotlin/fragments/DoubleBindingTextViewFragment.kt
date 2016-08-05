@@ -1,7 +1,6 @@
 package au.com.tilbrook.android.rxkotlin.fragments
 
 import android.os.Bundle
-import android.text.InputType
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
 import android.text.TextUtils.isEmpty

@@ -56,11 +56,11 @@ class BufferDemoFragment : BaseFragment() {
         return with(ctx) {
             verticalLayout {
                 textView(R.string.msg_demo_buffer) {
-                    lparams (width = matchParent)
+                    lparams(width = matchParent)
                     padding = dip(10)
                 }.gravity = Gravity.CENTER
                 _tapBtn = button(R.string.tap_me) {
-                    lparams (width = matchParent) {
+                    lparams(width = matchParent) {
                         horizontalMargin = dip(90)
                     }
                     textSize = 16f
@@ -87,11 +87,11 @@ class BufferDemoFragment : BaseFragment() {
 
     private fun _getBufferedSubscription(): Subscription {
         return RxView.clicks(_tapBtn)
-                .map({
+                .map {
                     Timber.d("--------- GOT A TAP")
                     _log("GOT A TAP")
                     1
-                })
+                }
                 .buffer(2, TimeUnit.SECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(

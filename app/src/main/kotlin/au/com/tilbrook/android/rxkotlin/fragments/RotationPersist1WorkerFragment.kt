@@ -1,17 +1,14 @@
 package au.com.tilbrook.android.rxkotlin.fragments
 
-import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import java.util.concurrent.TimeUnit
-
 import au.com.tilbrook.android.rxkotlin.MainActivity
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
 import rx.Subscription
-import rx.functions.Func1
 import rx.observables.ConnectableObservable
+import java.util.concurrent.TimeUnit
 
 class RotationPersist1WorkerFragment : Fragment() {
 
@@ -52,13 +49,9 @@ class RotationPersist1WorkerFragment : Fragment() {
             return
         }
 
-        val intsObservable = //
-                Observable.interval(1, TimeUnit.SECONDS)//
-                        .map(object : Func1<Long, Int> {
-                            override fun call(aLong: Long?): Int? {
-                                return aLong!!.toInt()
-                            }
-                        })//
+        val intsObservable =
+                Observable.interval(1, TimeUnit.SECONDS)
+                        .map { it.toInt() }
                         .take(20)
 
         // -----------------------------------------------------------------------------------

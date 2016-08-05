@@ -4,23 +4,16 @@ package au.com.tilbrook.android.rxkotlin.fragments
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.text.TextUtils.isEmpty
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
-import au.com.tilbrook.android.rxkotlin.retrofit.Contributor
-import au.com.tilbrook.android.rxkotlin.retrofit.GithubApi
-import au.com.tilbrook.android.rxkotlin.retrofit.GithubService
-import au.com.tilbrook.android.rxkotlin.retrofit.User
+import au.com.tilbrook.android.rxkotlin.retrofit.*
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
-import rx.Observer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import rx.subscriptions.CompositeSubscription
@@ -54,7 +47,7 @@ class RetrofitFragment : Fragment() {
             verticalLayout {
                 lparams { width = matchParent; height = matchParent }
                 textView(R.string.msg_demo_retrofit) {
-                    lparams (width = matchParent)
+                    lparams(width = matchParent)
                     padding = dip(10)
                 }.gravity = Gravity.CENTER
                 linearLayout {
@@ -67,12 +60,12 @@ class RetrofitFragment : Fragment() {
                     }
                     _contributorsUsername = editText("square") {
                         hint = "owner"
-                        lparams (width = 0, weight = 1f)
+                        lparams(width = 0, weight = 1f)
                         textSize = 12f
                     }
                     _contributorsRepo = editText("retrofit") {
                         hint = "reponame"
-                        lparams (width = 0, weight = 1f)
+                        lparams(width = 0, weight = 1f)
                         textSize = 12f
                     }
                 }
@@ -86,25 +79,25 @@ class RetrofitFragment : Fragment() {
                     }
                     _userInfoUsername = editText("square") {
                         hint = "owner"
-                        lparams (width = 0, weight = 1f)
+                        lparams(width = 0, weight = 1f)
                         textSize = 12f
                     }
                     _userInfoRepo = editText("retrofit") {
                         hint = "reponame"
-                        lparams (width = 0, weight = 1f)
+                        lparams(width = 0, weight = 1f)
                         textSize = 12f
                     }
                 }
                 _resultList = listView {
-                    lparams (height = matchParent, width = matchParent)
+                    lparams(height = matchParent, width = matchParent)
                 }
             }
         }
 
         _adapter = ArrayAdapter(activity,
-            R.layout.item_log,
-            R.id.item_log,
-            ArrayList<String>())
+                R.layout.item_log,
+                R.id.item_log,
+                ArrayList<String>())
         _resultList.adapter = _adapter
 
         return layout
@@ -118,62 +111,47 @@ class RetrofitFragment : Fragment() {
     private val onListContributorsClicked = { v: View? ->
         _adapter.clear()
 
-        _subscriptions.add(
-            _githubService.contributors(_contributorsUsername.text.toString(), _contributorsRepo.text.toString())
+        _subscriptions.add(_githubService
+                .contributors(_contributorsUsername.text.toString(), _contributorsRepo.text.toString())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(object : Observer<MutableList<Contributor>> {
-                    override fun onCompleted() {
-                        Timber.d("Retrofit call 1 completed")
-                    }
+                .subscribe({ contributors ->
+                               contributors.forEach { c ->
+                        _adapter.add("%s has made %d contributions to %s".format(c.login, c.contributions, _contributorsRepo.text.toString()))
 
-                    override fun onError(e: Throwable) {
-                        Timber.e(e,
-                            "woops we got an error while getting the list of contributors")
-                    }
-
-                    override fun onNext(contributors: MutableList<Contributor>) {
-                        for (c in contributors) {
-                            _adapter.add("%s has made %d contributions to %s".format(c.login, c.contributions, _contributorsRepo.text.toString()))
-
-                            Timber.d("%s has made %d contributions to %s",
+                        Timber.d("%s has made %d contributions to %s",
                                 c.login,
                                 c.contributions,
                                 _contributorsRepo.text.toString())
-                        }
                     }
-                }))
+                }, {
+                    Timber.e(it, "woops we got an error while getting the list of contributors")
+                }, {
+                    Timber.d("Retrofit call 1 completed")
+                })
+        )
     }
 
     private val onListContributorsWithFullUserInfoClicked = { v: View? ->
         _adapter.clear()
 
         _subscriptions.add(_githubService.contributors(_contributorsUsername.text.toString(),
-            _contributorsRepo.text.toString())
-            .flatMap { contributors -> Observable.from(contributors) }
-            .flatMap { contributor ->
-                val _userObservable = _githubService.user(contributor.login).filter { user -> !isEmpty(user.name) && !isEmpty(user.email) }
+                _contributorsRepo.text.toString())
+                .flatMap { contributors -> Observable.from(contributors) }
+                .flatMap { contributor ->
+                    val _userObservable = _githubService
+                            .user(contributor.login)
+                            .filter { user -> !isEmpty(user.name) && !isEmpty(user.email) }
 
-                Observable.zip(_userObservable,
-                    Observable.just(contributor),
+                    Observable.zip(_userObservable, Observable.just(contributor))
                     { user: User, contributor: Contributor -> Pair(user, contributor) }
-                )
-            }
-            .subscribeOn(Schedulers.newThread())
-            .unsubscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<Pair<User, Contributor>> {
-                override fun onCompleted() {
-                    Timber.d("Retrofit call 2 completed ")
-                }
 
-                override fun onError(e: Throwable) {
-                    Timber.e(e,
-                        "error while getting the list of contributors along with full names")
                 }
-
-                override fun onNext(pair: Pair<User, Contributor>) {
+                .subscribeOn(Schedulers.newThread())
+                .unsubscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ pair ->
                     val user = pair.first
                     val contributor = pair.second
 
@@ -182,12 +160,16 @@ class RetrofitFragment : Fragment() {
                     _adapter.notifyDataSetChanged()
 
                     Timber.d("%s(%s) has made %d contributions to %s",
-                        user.name,
-                        user.email,
-                        contributor.contributions,
-                        _contributorsRepo.text.toString())
-                }
-            }))
+                            user.name,
+                            user.email,
+                            contributor.contributions,
+                            _contributorsRepo.text.toString())
+                }, {
+                    Timber.e(it, "error while getting the list of contributors along with full names")
+                }, {
+                    Timber.d("Retrofit call 2 completed ")
+                })
+        )
     }
 
 }
