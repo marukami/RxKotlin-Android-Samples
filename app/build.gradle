@@ -50,6 +50,10 @@ dependencies {
     compile 'org.jetbrains.anko:anko-sdk15:0.8.3' // sdk19, sdk21, sdk23 are also available
     compile 'org.jetbrains.anko:anko-support-v4:0.8.3' // In case you need support-v4 bindings
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.4-beta2'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.4-beta2'
 }
 buildscript {
     ext.kotlin_version = '1.0.3'
