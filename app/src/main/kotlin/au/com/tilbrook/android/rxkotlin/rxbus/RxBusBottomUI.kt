@@ -13,16 +13,16 @@ import org.jetbrains.anko.*
  * Created by Mitchell Tilbrook on 1/3/16.
  */
 
-class RxBusBottomUi: AnkoComponent<Fragment> {
+class RxBusBottomUi : AnkoComponent<Fragment> {
 
     private var _tapEventCountShow: TextView? = null
     private var _tapEventTxtShow: TextView? = null
     val tapEventCountShow: TextView
         get() = _tapEventCountShow ?:
-            throw IllegalStateException("createView was not called before first")
+                throw IllegalStateException("createView was not called before first")
     val tapEventTxtShow: TextView
         get() = _tapEventTxtShow ?:
-            throw IllegalStateException("createView was not called before first")
+                throw IllegalStateException("createView was not called before first")
 
     override fun createView(ui: AnkoContext<Fragment>) = ui.apply {
         frameLayout {

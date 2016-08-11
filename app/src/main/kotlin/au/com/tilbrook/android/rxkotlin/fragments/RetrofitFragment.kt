@@ -95,9 +95,9 @@ class RetrofitFragment : Fragment() {
         }
 
         _adapter = ArrayAdapter(activity,
-                R.layout.item_log,
-                R.id.item_log,
-                ArrayList<String>())
+                                R.layout.item_log,
+                                R.id.item_log,
+                                ArrayList<String>())
         _resultList.adapter = _adapter
 
         return layout
@@ -111,64 +111,85 @@ class RetrofitFragment : Fragment() {
     private val onListContributorsClicked = { v: View? ->
         _adapter.clear()
 
-        _subscriptions.add(_githubService
-                .contributors(_contributorsUsername.text.toString(), _contributorsRepo.text.toString())
+        _subscriptions.add(
+            _githubService
+                .contributors(_contributorsUsername.text.toString(),
+                              _contributorsRepo.text.toString())
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ contributors ->
-                               contributors.forEach { c ->
-                        _adapter.add("%s has made %d contributions to %s".format(c.login, c.contributions, _contributorsRepo.text.toString()))
+                .subscribe(
+                    { contributors ->
+                        contributors.forEach { c ->
+                            _adapter.add(
+                                "%s has made %d contributions to %s".format(
+                                    c.login, c.contributions,
+                                    _contributorsRepo.text.toString()))
 
-                        Timber.d("%s has made %d contributions to %s",
-                                c.login,
-                                c.contributions,
-                                _contributorsRepo.text.toString())
+                            Timber.d("%s has made %d contributions to %s",
+                                     c.login,
+                                     c.contributions,
+                                     _contributorsRepo.text.toString())
+                        }
+                    }, {
+                        Timber.e(it,
+                                 "woops we got an error while getting the list of contributors")
+                    }, {
+                        Timber.d("Retrofit call 1 completed")
                     }
-                }, {
-                    Timber.e(it, "woops we got an error while getting the list of contributors")
-                }, {
-                    Timber.d("Retrofit call 1 completed")
-                })
+                )
         )
     }
 
     private val onListContributorsWithFullUserInfoClicked = { v: View? ->
         _adapter.clear()
 
-        _subscriptions.add(_githubService.contributors(_contributorsUsername.text.toString(),
-                _contributorsRepo.text.toString())
+        _subscriptions.add(
+            _githubService
+                .contributors(_contributorsUsername.text.toString(),
+                              _contributorsRepo.text.toString()
+                )
                 .flatMap { contributors -> Observable.from(contributors) }
                 .flatMap { contributor ->
                     val _userObservable = _githubService
-                            .user(contributor.login)
-                            .filter { user -> !isEmpty(user.name) && !isEmpty(user.email) }
+                        .user(contributor.login)
+                        .filter { user ->
+                            !isEmpty(user.name) && !isEmpty(user.email)
+                        }
 
                     Observable.zip(_userObservable, Observable.just(contributor))
-                    { user: User, contributor: Contributor -> Pair(user, contributor) }
+                    { user: User, contributor: Contributor ->
+                        Pair(user, contributor)
+                    }
 
                 }
                 .subscribeOn(Schedulers.newThread())
                 .unsubscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ pair ->
-                    val user = pair.first
-                    val contributor = pair.second
+                .subscribe(
+                    { pair ->
+                        val user = pair.first
+                        val contributor = pair.second
 
-                    _adapter.add("%s(%s) has made %d contributions to %s".format(user.name, user.email, contributor.contributions, _contributorsRepo.text.toString()))
+                        _adapter.add(
+                            "%s(%s) has made %d contributions to %s".format(
+                                user.name, user.email,
+                                contributor.contributions,
+                                _contributorsRepo.text.toString()))
 
-                    _adapter.notifyDataSetChanged()
+                        _adapter.notifyDataSetChanged()
 
-                    Timber.d("%s(%s) has made %d contributions to %s",
-                            user.name,
-                            user.email,
-                            contributor.contributions,
-                            _contributorsRepo.text.toString())
-                }, {
-                    Timber.e(it, "error while getting the list of contributors along with full names")
-                }, {
-                    Timber.d("Retrofit call 2 completed ")
-                })
+                        Timber.d("%s(%s) has made %d contributions to %s",
+                                 user.name,
+                                 user.email,
+                                 contributor.contributions,
+                                 _contributorsRepo.text.toString())
+                    }, {
+                        Timber.e(it,
+                                 "error while getting the list of contributors along with full names")
+                    }, {
+                        Timber.d("Retrofit call 2 completed ")
+                    })
         )
     }
 

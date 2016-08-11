@@ -3,10 +3,7 @@ package au.com.tilbrook.android.rxkotlin.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper.getMainLooper
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
@@ -33,7 +30,7 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
 
         val fm = activity.supportFragmentManager
         var frag: RotationPersist1WorkerFragment? = //
-                fm.findFragmentByTag(FRAG_TAG) as? RotationPersist1WorkerFragment
+            fm.findFragmentByTag(FRAG_TAG) as? RotationPersist1WorkerFragment
 
         if (frag == null) {
             frag = RotationPersist1WorkerFragment()
@@ -46,19 +43,19 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
     override fun observeResults(intsObservable: ConnectableObservable<Int>) {
 
         _subscriptions.add(
-                intsObservable.doOnSubscribe({ _log("Subscribing to intsObservable") })
-                        .subscribe(
-                                {
-                                    _log("Worker frag splots out - $it")
-                                },
-                                {
-                                    Timber.e(it, "Error in worker demo frag observable")
-                                    _log("Dang! something went wrong.")
-                                },
-                                {
-                                    _log("Observable is complete")
-                                }
-                        )
+            intsObservable.doOnSubscribe({ _log("Subscribing to intsObservable") })
+                .subscribe(
+                    {
+                        _log("Worker frag splots out - $it")
+                    },
+                    {
+                        Timber.e(it, "Error in worker demo frag observable")
+                        _log("Dang! something went wrong.")
+                    },
+                    {
+                        _log("Observable is complete")
+                    }
+                )
         )
     }
 
@@ -78,17 +75,17 @@ class RotationPersist1Fragment : BaseFragment(), RotationPersist1WorkerFragment.
             verticalLayout {
                 textView(R.string.msg_demo_rotation_persist)
                 {
-                    lparams ( width = matchParent )
+                    lparams(width = matchParent)
                     padding = dip(10)
                     gravity = Gravity.CENTER
                 }
-                button ("Start operation")
+                button("Start operation")
                 {
-                    lparams ( width = matchParent )
+                    lparams(width = matchParent)
                     onClick { startOperationFromWorkerFrag() }
                 }
                 _logList = listView {
-                    lparams (height = matchParent, width = matchParent)
+                    lparams(height = matchParent, width = matchParent)
                 }
             }
         }

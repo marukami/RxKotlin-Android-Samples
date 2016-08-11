@@ -42,8 +42,8 @@ class RxBusDemoFragment : BaseFragment() {
             .beginTransaction()
             .replace(R.id.demo_rxbus_frag_1, RxBusDemo_TopFragment())
             .replace(R.id.demo_rxbus_frag_2, RxBusDemo_Bottom3Fragment())
-        //.replace(R.id.demo_rxbus_frag_2, new RxBusDemo_Bottom2Fragment())
-        //.replace(R.id.demo_rxbus_frag_2, new RxBusDemo_Bottom1Fragment())
+            //.replace(R.id.demo_rxbus_frag_2, new RxBusDemo_Bottom2Fragment())
+            //.replace(R.id.demo_rxbus_frag_2, new RxBusDemo_Bottom1Fragment())
             .commit()
     }
 

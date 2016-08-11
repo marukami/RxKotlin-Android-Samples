@@ -22,67 +22,67 @@ class MainFragment : BaseFragment() {
                 }
 
                 verticalLayout {
-                    button (R.string.btn_demo_schedulers) {
+                    button(R.string.btn_demo_schedulers) {
                         style { R.style.buttons }
                         onClick {
-                            clickedOn( ConcurrencyWithSchedulersDemoFragment() )
+                            clickedOn(ConcurrencyWithSchedulersDemoFragment())
                         }
                     }
-                    button (R.string.btn_demo_buffer) {
+                    button(R.string.btn_demo_buffer) {
                         style { R.style.buttons }
                         onClick {
-                            clickedOn ( BufferDemoFragment() )
+                            clickedOn(BufferDemoFragment())
                         }
                     }
-                    button (R.string.btn_demo_debounce) {
+                    button(R.string.btn_demo_debounce) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(DebounceSearchEmitterFragment())
                         }
                     }
-                    button (R.string.btn_demo_retrofit) {
+                    button(R.string.btn_demo_retrofit) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(RetrofitFragment())
                         }
                     }
-                    button (R.string.btn_demo_double_binding_textview) {
+                    button(R.string.btn_demo_double_binding_textview) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(DoubleBindingTextViewFragment())
                         }
                     }
-                    button (R.string.btn_demo_rxbus) {
+                    button(R.string.btn_demo_rxbus) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(RxBusDemoFragment())
                         }
                     }
-                    button (R.string.btn_demo_form_validation_combinel) {
+                    button(R.string.btn_demo_form_validation_combinel) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(FormValidationCombineLatestFragment())
                         }
                     }
-                    button (R.string.btn_demo_pseudocache) {
+                    button(R.string.btn_demo_pseudocache) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(PseudoCacheMergeFragment())
                         }
                     }
-                    button (R.string.btn_demo_timing) {
+                    button(R.string.btn_demo_timing) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(TimingDemoFragment())
                         }
                     }
-                    button (R.string.btn_demo_exponential_backoff) {
+                    button(R.string.btn_demo_exponential_backoff) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(ExponentialBackoffFragment())
                         }
                     }
-                    button (R.string.btn_demo_rotation_persist) {
+                    button(R.string.btn_demo_rotation_persist) {
                         style { R.style.buttons }
                         onClick {
                             clickedOn(RotationPersist2Fragment())
@@ -95,10 +95,10 @@ class MainFragment : BaseFragment() {
 
     fun clickedOn(fragment: Fragment) {
         val tag = fragment.javaClass.toString()
-         activity.supportFragmentManager
-                .beginTransaction()
-                .addToBackStack(tag)
-                .replace(android.R.id.content, fragment, tag)
-                .commit();
+        activity.supportFragmentManager
+            .beginTransaction()
+            .addToBackStack(tag)
+            .replace(android.R.id.content, fragment, tag)
+            .commit();
     }
 }

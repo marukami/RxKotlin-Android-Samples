@@ -44,7 +44,7 @@ class FormValidationCombineLatestFragment : BaseFragment() {
             verticalLayout {
                 lparams(width = matchParent, height = matchParent)
                 textView(R.string.msg_demo_form_comb_latest) {
-                    lparams (width = matchParent)
+                    lparams(width = matchParent)
                     padding = dip(10)
                     this.gravity = CENTER
                 }

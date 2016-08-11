@@ -34,7 +34,7 @@ class DoubleBindingTextViewFragment : BaseFragment() {
 
         val layout = with(ctx) {
             verticalLayout {
-                textView(R.string.msg_demo_doublebinding){
+                textView(R.string.msg_demo_doublebinding) {
                     lparams(width = matchParent)
                     padding = dip(10)
                 }.gravity = CENTER
@@ -75,7 +75,7 @@ class DoubleBindingTextViewFragment : BaseFragment() {
             .asObservable()
             .subscribe { aFloat -> _result.text = aFloat.toString() }
 
-        listener.afterTextChanged { onNumberChanged()}
+        listener.afterTextChanged { onNumberChanged() }
         onNumberChanged()
         _number2.requestFocus()
 

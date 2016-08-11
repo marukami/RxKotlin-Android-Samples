@@ -1,10 +1,7 @@
 package au.com.tilbrook.android.rxkotlin.fragments
 
 import android.os.Bundle
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
@@ -14,7 +11,6 @@ import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
-import rx.Subscriber
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -62,10 +58,12 @@ class PseudoCacheMergeFragment : BaseFragment() {
     }
 
     val onDemoPseudoCacheClicked = { v: View? ->
-        _adapter = ArrayAdapter(activity,
+        _adapter = ArrayAdapter(
+            activity,
             R.layout.item_log,
             R.id.item_log,
-            ArrayList<String>())
+            ArrayList<String>()
+        )
 
         _resultList.adapter = _adapter
         _initializeCache()

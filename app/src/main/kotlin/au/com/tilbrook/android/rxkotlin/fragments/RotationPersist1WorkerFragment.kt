@@ -50,9 +50,9 @@ class RotationPersist1WorkerFragment : Fragment() {
         }
 
         val intsObservable =
-                Observable.interval(1, TimeUnit.SECONDS)
-                        .map { it.toInt() }
-                        .take(20)
+            Observable.interval(1, TimeUnit.SECONDS)
+                .map { it.toInt() }
+                .take(20)
 
         // -----------------------------------------------------------------------------------
         // Making our observable "HOT" for the purpose of the demo.

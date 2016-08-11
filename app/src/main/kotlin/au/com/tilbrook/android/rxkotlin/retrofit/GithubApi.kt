@@ -12,9 +12,9 @@ import rx.Observable
 /**
  * Created by Mitchell Tilbrook on 1/2/16.
  */
-data class User (val name: String = "", val email: String = "")
+data class User(val name: String = "", val email: String = "")
 
-data class Contributor (val login: String = "", val contributions: Long = 0)
+data class Contributor(val login: String = "", val contributions: Long = 0)
 
 interface GithubApi {
 
@@ -42,11 +42,15 @@ object GithubService {
 
         if (!TextUtils.isEmpty(githubToken)) {
 
-            val client = OkHttpClient.Builder().addInterceptor { chain ->
-                val request = chain.request()
-                val newReq = request.newBuilder().addHeader("Authorization", "token %s".format(githubToken)).build()
-                chain.proceed(newReq)
-            }.build()
+            val client = OkHttpClient.Builder()
+                .addInterceptor { chain ->
+                    val request = chain.request()
+                    val newReq = request.newBuilder()
+                        .addHeader("Authorization", "token %s".format(githubToken))
+                        .build()
+                    chain.proceed(newReq)
+                }
+                .build()
 
             builder.client(client)
         }

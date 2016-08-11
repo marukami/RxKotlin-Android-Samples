@@ -9,11 +9,7 @@ import android.widget.TextView
 import au.com.tilbrook.android.rxkotlin.MainActivity
 import au.com.tilbrook.android.rxkotlin.fragments.BaseFragment
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
-import org.jetbrains.anko.AnkoContext
-import org.jetbrains.anko.UI
-import org.jetbrains.anko.setContentView
 import org.jetbrains.anko.support.v4.UI
-import org.jetbrains.anko.support.v4.ctx
 import rx.android.schedulers.AndroidSchedulers
 import rx.subscriptions.CompositeSubscription
 import java.util.concurrent.TimeUnit
@@ -47,8 +43,8 @@ class RxBusDemo_Bottom2Fragment : BaseFragment() {
 
         val tapEventEmitter = _rxBus.toObserverable().share()
 
-        _subscriptions.add(tapEventEmitter
-            .subscribe { event ->
+        _subscriptions.add(
+            tapEventEmitter.subscribe { event ->
                 if (event is RxBusDemoFragment.TapEvent) {
                     _showTapText()
                 }
@@ -59,8 +55,8 @@ class RxBusDemo_Bottom2Fragment : BaseFragment() {
         val debouncedBufferEmitter = tapEventEmitter.buffer(debouncedEmitter)
 
         _subscriptions.add(debouncedBufferEmitter
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { taps -> _showTapCount(taps.size) }
+                               .observeOn(AndroidSchedulers.mainThread())
+                               .subscribe { taps -> _showTapCount(taps.size) }
         )
     }
 
@@ -83,6 +79,7 @@ class RxBusDemo_Bottom2Fragment : BaseFragment() {
         _tapEventCountShow.visibility = View.VISIBLE
         _tapEventCountShow.scaleX = 1f
         _tapEventCountShow.scaleY = 1f
-        ViewCompat.animate(_tapEventCountShow).scaleXBy(-1f).scaleYBy(-1f).setDuration(800).setStartDelay(100)
+        ViewCompat.animate(_tapEventCountShow).scaleXBy(-1f).scaleYBy(-1f).setDuration(
+            800).setStartDelay(100)
     }
 }

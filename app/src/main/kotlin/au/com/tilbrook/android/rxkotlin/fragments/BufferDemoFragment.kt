@@ -3,10 +3,7 @@ package au.com.tilbrook.android.rxkotlin.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
@@ -87,31 +84,31 @@ class BufferDemoFragment : BaseFragment() {
 
     private fun _getBufferedSubscription(): Subscription {
         return RxView.clicks(_tapBtn)
-                .map {
-                    Timber.d("--------- GOT A TAP")
-                    _log("GOT A TAP")
-                    1
+            .map {
+                Timber.d("--------- GOT A TAP")
+                _log("GOT A TAP")
+                1
+            }
+            .buffer(2, TimeUnit.SECONDS)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    Timber.d("--------- onNext")
+                    if (it.size > 0) {
+                        _log("$it taps")
+                    } else {
+                        Timber.d("--------- No taps received ");
+                    }
+                },
+                {
+                    Timber.e(it, "--------- Woops on error!")
+                    _log("Dang error! check your logs")
+                },
+                {
+                    // fyi: you'll never reach here
+                    Timber.d("----- onCompleted")
                 }
-                .buffer(2, TimeUnit.SECONDS)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(
-                        {
-                            Timber.d("--------- onNext")
-                            if (it.size > 0) {
-                                _log("$it taps")
-                            } else {
-                                Timber.d("--------- No taps received ");
-                            }
-                        },
-                        {
-                            Timber.e(it, "--------- Woops on error!")
-                            _log("Dang error! check your logs")
-                        },
-                        {
-                            // fyi: you'll never reach here
-                            Timber.d("----- onCompleted")
-                        }
-                );
+            );
     }
 
     // -----------------------------------------------------------------------------------

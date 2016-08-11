@@ -3,10 +3,7 @@ package au.com.tilbrook.android.rxkotlin.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper.getMainLooper
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
@@ -35,7 +32,7 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
         val fm = activity.supportFragmentManager
         var frag: RotationPersist2WorkerFragment? =
-                fm.findFragmentByTag(FRAG_TAG) as? RotationPersist2WorkerFragment
+            fm.findFragmentByTag(FRAG_TAG) as? RotationPersist2WorkerFragment
 
         if (frag == null) {
             frag = RotationPersist2WorkerFragment()
@@ -49,16 +46,19 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
     override fun setStream(intStream: Observable<Int>) {
 
-        _subscriptions.add(intStream
+        _subscriptions.add(
+            intStream
                 .doOnSubscribe { _log("Subscribing to intsObservable") }
-                .subscribe({
-                    _log("Worker frag spits out - %d".format(it))
-                }, {
-                    Timber.e(it, "Error in worker demo frag observable")
-                    _log("Dang! something went wrong.")
-                }, {
-                    _log("Observable is complete")
-                })
+                .subscribe(
+                    {
+                        _log("Worker frag spits out - %d".format(it))
+                    }, {
+                        Timber.e(it, "Error in worker demo frag observable")
+                        _log("Dang! something went wrong.")
+                    }, {
+                        _log("Observable is complete")
+                    }
+                )
         )
     }
 
@@ -110,9 +110,9 @@ class RotationPersist2Fragment : BaseFragment(), RotationPersist2WorkerFragment.
 
         // You can only do below stuff on main thread.
         Handler(getMainLooper()).post({
-            _adapter.clear()
-            _adapter.addAll(_logs)
-        })
+                                          _adapter.clear()
+                                          _adapter.addAll(_logs)
+                                      })
     }
 
     companion object {

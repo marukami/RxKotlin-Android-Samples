@@ -2,21 +2,15 @@ package au.com.tilbrook.android.rxkotlin.rxbus
 
 import android.os.Bundle
 import android.support.v4.view.ViewCompat
-import android.view.Gravity
-import android.view.Gravity.*
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.TextView
 import au.com.tilbrook.android.rxkotlin.MainActivity
-import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.fragments.BaseFragment
 import au.com.tilbrook.android.rxkotlin.utils.unSubscribeIfNotNull
-import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.UI
-import org.jetbrains.anko.support.v4.ctx
 import rx.subscriptions.CompositeSubscription
 
 class RxBusDemo_Bottom1Fragment : BaseFragment() {
@@ -45,11 +39,11 @@ class RxBusDemo_Bottom1Fragment : BaseFragment() {
 
         _subscriptions.add(
             _rxBus.toObserverable()
-            .subscribe { event ->
-                if (event is RxBusDemoFragment.TapEvent) {
-                    _showTapText()
-                }
-            })
+                .subscribe { event ->
+                    if (event is RxBusDemoFragment.TapEvent) {
+                        _showTapText()
+                    }
+                })
     }
 
     override fun onStop() {

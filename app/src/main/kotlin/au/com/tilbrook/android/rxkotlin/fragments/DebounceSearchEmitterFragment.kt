@@ -4,10 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.view.inputmethod.EditorInfo.TYPE_TEXT_FLAG_NO_SUGGESTIONS
 import android.widget.ArrayAdapter
 import android.widget.EditText
@@ -43,9 +40,9 @@ class DebounceSearchEmitterFragment : BaseFragment() {
         _setupLogger()
 
         _subscription = RxTextView.textChangeEvents(_inputSearchText)
-                .debounce(400, TimeUnit.MILLISECONDS) // default Scheduler is Computation
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(_getSearchObserver())
+            .debounce(400, TimeUnit.MILLISECONDS) // default Scheduler is Computation
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(_getSearchObserver())
     }
 
     override fun onCreateView(inflater: LayoutInflater?,
@@ -54,13 +51,13 @@ class DebounceSearchEmitterFragment : BaseFragment() {
         return with(ctx) {
             verticalLayout {
                 lparams(width = matchParent, height = matchParent)
-                textView (R.string.msg_demo_debounce) {
-                    lparams (width = matchParent)
+                textView(R.string.msg_demo_debounce) {
+                    lparams(width = matchParent)
                     padding = dip(10)
                     gravity = Gravity.CENTER
                 }
                 linearLayout {
-                    lparams (width = matchParent)
+                    lparams(width = matchParent)
                     orientation = HORIZONTAL
                     _inputSearchText = editText {
                         lparams {
@@ -72,7 +69,7 @@ class DebounceSearchEmitterFragment : BaseFragment() {
                         hint = "Enter some search text"
                         inputType = TYPE_TEXT_FLAG_NO_SUGGESTIONS
                     }
-                    imageButton (android.R.drawable.ic_menu_close_clear_cancel) {
+                    imageButton(android.R.drawable.ic_menu_close_clear_cancel) {
                         lparams(width = 0, weight = 1f)
                         onClick {
                             onClearLog()
@@ -101,14 +98,14 @@ class DebounceSearchEmitterFragment : BaseFragment() {
 
     private fun _getSearchObserver(): Observer<TextViewTextChangeEvent> {
         return subscriber<TextViewTextChangeEvent>()
-                .onCompleted { Timber.d("--------- onComplete") }
-                .onError {
-                    Timber.e(it, "--------- Woops on error!")
-                    _log("Dang error. check your logs")
-                }
-                .onNext {
-                    _log("Searching for ${it.text().toString()}")
-                }
+            .onCompleted { Timber.d("--------- onComplete") }
+            .onError {
+                Timber.e(it, "--------- Woops on error!")
+                _log("Dang error. check your logs")
+            }
+            .onNext {
+                _log("Searching for ${it.text().toString()}")
+            }
     }
 
     // -----------------------------------------------------------------------------------
@@ -144,5 +141,6 @@ class DebounceSearchEmitterFragment : BaseFragment() {
         return Looper.myLooper() == Looper.getMainLooper()
     }
 
-    private inner class LogAdapter(context: Context, logs: List<String>) : ArrayAdapter<String>(context, R.layout.item_log, R.id.item_log, logs)
+    private inner class LogAdapter(context: Context, logs: List<String>) : ArrayAdapter<String>(
+        context, R.layout.item_log, R.id.item_log, logs)
 }

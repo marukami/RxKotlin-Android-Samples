@@ -3,17 +3,13 @@ package au.com.tilbrook.android.rxkotlin.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper.getMainLooper
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ListView
 import au.com.tilbrook.android.rxkotlin.R
 import au.com.tilbrook.android.rxkotlin.writing.LogAdapter
 import org.jetbrains.anko.*
 import org.jetbrains.anko.support.v4.ctx
 import rx.Observable
-import rx.Observer
 import rx.functions.Func1
 import rx.observables.MathObservable
 import rx.subscriptions.CompositeSubscription
@@ -84,7 +80,7 @@ class ExponentialBackoffFragment : BaseFragment() {
                 .retryWhen(RetryWithDelay(5, 1000))
                 .doOnSubscribe { _log("Attempting the impossible 5 times in intervals of 1s") }//
                 .subscribe(
-                        {
+                    {
                         Timber.d("on Next")
                     },
                     {
@@ -103,38 +99,43 @@ class ExponentialBackoffFragment : BaseFragment() {
         _adapter.clear()
 
         _subscriptions.add(
-
             Observable.range(1, 4)
                 .delay { integer ->
                     // Rx-y way of doing the Fibonnaci :P
                     MathObservable//
-                        .sumInteger(Observable.range(1, integer!!)).flatMap { targetSecondDelay -> Observable.just(integer).delay(targetSecondDelay!!.toLong(), TimeUnit.SECONDS) }
-                }//
-                .doOnSubscribe { _log("Execute 4 tasks with delay - time now: [xx:%02d]".format(_getSecondHand())) }//
-                .subscribe(object : Observer<Int> {
-                    override fun onCompleted() {
-                        Timber.d("onCompleted")
-                        _log("Completed")
+                        .sumInteger(Observable.range(1, integer!!)).flatMap { targetSecondDelay ->
+                        Observable.just(integer).delay(targetSecondDelay!!.toLong(),
+                                                       TimeUnit.SECONDS)
                     }
-
-                    override fun onError(e: Throwable) {
-                        Timber.d(e, "arrrr. Error")
-                        _log("Error")
-                    }
-
-                    override fun onNext(integer: Int?) {
+                }
+                .doOnSubscribe {
+                    _log(
+                        "Execute 4 tasks with delay - time now: [xx:%02d]".format(_getSecondHand()))
+                }
+                .subscribe(
+                    { integer ->
                         Timber.d("executing Task %d [xx:%02d]", integer, _getSecondHand())
                         _log("executing Task %d  [xx:%02d]".format(integer, _getSecondHand()))
 
+                    },
+                    {
+                        Timber.d(it, "arrrr. Error")
+                        _log("Error")
+                    },
+                    {
+                        Timber.d("onCompleted")
+                        _log("Completed")
                     }
-                }))
+                )
+        )
     }
 
     // -----------------------------------------------------------------------------------
 
     private fun _getSecondHand(): Int {
         val millis = System.currentTimeMillis()
-        return (TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis))).toInt()
+        return (TimeUnit.MILLISECONDS.toSeconds(millis) - TimeUnit.MINUTES.toSeconds(
+            TimeUnit.MILLISECONDS.toMinutes(millis))).toInt()
     }
 
     // -----------------------------------------------------------------------------------
@@ -185,7 +186,7 @@ class ExponentialBackoffFragment : BaseFragment() {
                     Timber.d("Retrying in %d ms", _retryCount * _retryDelayMillis)
                     _log("Retrying in %d ms".format(_retryCount * _retryDelayMillis))
                     Observable.timer((_retryCount * _retryDelayMillis).toLong(),
-                        TimeUnit.MILLISECONDS
+                                     TimeUnit.MILLISECONDS
                     )
                 } else {
                     Timber.d("Argh! i give up")

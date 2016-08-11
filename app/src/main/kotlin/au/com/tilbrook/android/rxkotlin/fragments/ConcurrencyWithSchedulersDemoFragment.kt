@@ -4,11 +4,8 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
+import android.view.*
 import android.view.View.INVISIBLE
-import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.ListView
@@ -43,36 +40,36 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-       return with(ctx) {
-           verticalLayout {
-               textView(R.string.msg_demo_concurrency_schedulers) {
-                   lparams (width = matchParent)
-                   padding = dip(10)
-               }.gravity = Gravity.CENTER
-               linearLayout {
-                   orientation = HORIZONTAL
-                   button {
-                       text = "Start long operation"
-                       textSize = 16f
-                       lparams {
-                           leftMargin = dip(16)
-                       }
-                       onClick {
-                           startLongOperation()
-                       }
-                   }
-                   _progress = progressBar {
-                       visibility = INVISIBLE
-                       lparams {
-                           leftMargin = dip(20)
-                       }
-                   }
-               }
-               _logsList = listView {
-                   lparams(width = matchParent, height = matchParent)
-               }
-           }
-       }
+        return with(ctx) {
+            verticalLayout {
+                textView(R.string.msg_demo_concurrency_schedulers) {
+                    lparams(width = matchParent)
+                    padding = dip(10)
+                }.gravity = Gravity.CENTER
+                linearLayout {
+                    orientation = HORIZONTAL
+                    button {
+                        text = "Start long operation"
+                        textSize = 16f
+                        lparams {
+                            leftMargin = dip(16)
+                        }
+                        onClick {
+                            startLongOperation()
+                        }
+                    }
+                    _progress = progressBar {
+                        visibility = INVISIBLE
+                        lparams {
+                            leftMargin = dip(20)
+                        }
+                    }
+                }
+                _logsList = listView {
+                    lparams(width = matchParent, height = matchParent)
+                }
+            }
+        }
     }
 
     override fun onPause() {
@@ -85,9 +82,9 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
         _log("Button Clicked")
 
         _subscription.add(_getObservable()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(LongOperationObserver())
+                              .subscribeOn(Schedulers.io())
+                              .observeOn(AndroidSchedulers.mainThread())
+                              .subscribe(LongOperationObserver())
         )
     }
 
@@ -106,22 +103,22 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
      * 2. onError
      * 3. onNext
      */
-    private inner class LongOperationObserver(): Observer<Boolean> {
+    private inner class LongOperationObserver() : Observer<Boolean> {
 
-            override fun onNext(bool: Boolean?) {
-                _log("onNext with return value \"%b\"".format(bool))
-            }
+        override fun onNext(bool: Boolean?) {
+            _log("onNext with return value \"%b\"".format(bool))
+        }
 
-            override fun onError(e: Throwable) {
-                Timber.e(e, "Error in RxJava Demo concurrency")
-                _log("Boo! Error %s".format(e.message))
-                _progress.visibility = INVISIBLE
-            }
+        override fun onError(e: Throwable) {
+            Timber.e(e, "Error in RxJava Demo concurrency")
+            _log("Boo! Error %s".format(e.message))
+            _progress.visibility = INVISIBLE
+        }
 
-            override fun onCompleted() {
-                _log("On complete")
-                _progress.visibility = INVISIBLE
-            }
+        override fun onCompleted() {
+            _log("On complete")
+            _progress.visibility = INVISIBLE
+        }
     }
 
     // -----------------------------------------------------------------------------------
@@ -169,5 +166,5 @@ class ConcurrencyWithSchedulersDemoFragment : BaseFragment() {
     }
 
     private inner class LogAdapter(context: Context, logs: List<String>)
-        : ArrayAdapter<String>(context, R.layout.item_log, R.id.item_log, logs)
+    : ArrayAdapter<String>(context, R.layout.item_log, R.id.item_log, logs)
 }
